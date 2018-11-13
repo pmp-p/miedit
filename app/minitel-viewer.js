@@ -13,8 +13,8 @@ window.addEventListener("load", function() {
     } else {
         stream = queryParameters("stream")
     }
-
-    for(let i = 0; i < stream.length; i++) {
-        emulator.send([stream.charCodeAt(i)])
-    }
+    if (stream !== undefined)
+        for(let i = 0; i < stream.length; i++) {
+            emulator.send([stream.charCodeAt(i)])
+        }
 })
