@@ -101,17 +101,26 @@ Minitel.Emulator = class {
          */
         const socketURL = container.getAttribute("data-socket") || undefined
         this.socket = socketURL ? new WebSocket(socketURL, ['binary', 'base64']) : undefined
-
+        
+        function blobToString(b) {
+            var u, x;
+            u = URL.createObjectURL(b);
+            x = new XMLHttpRequest();
+            x.open('GET', u, false); // although sync, you're not fetching over internet
+            x.send();
+            URL.revokeObjectURL(u);
+            return x.responseText;
+        }
+        
         if(this.socket) {
             this.socket.onopen = () => {
                 // Add a link: network → decoder
                 this.socket.onmessage = messageEvent => {
                     const message = []
-                    range(messageEvent.data.length).forEach(offset => {
-                        message.push(messageEvent.data[offset].charCodeAt(0))
-                    })
-
-                    this.send(message)
+                    const stream =  blobToString(messageEvent.data);
+                    for(let i = 0; i < stream.length; i++) {
+                           this.send([stream.charCodeAt(i)])
+                    }
                 }
 
                 // Add a link: keyboard → network
