@@ -100,7 +100,7 @@ Minitel.Emulator = class {
          * @member {Socket}
          */
         const socketURL = container.getAttribute("data-socket") || undefined
-        this.socket = socketURL ? new WebSocket(socketURL) : undefined
+        this.socket = socketURL ? new WebSocket(socketURL, ['binary', 'base64']) : undefined
 
         if(this.socket) {
             this.socket.onopen = () => {
